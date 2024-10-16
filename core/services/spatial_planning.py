@@ -1,0 +1,319 @@
+import os
+import random
+import geopandas as gpd
+from shapely.geometry import Point, Polygon, LineString
+from multiprocessing import Pool
+import matplotlib.pyplot as plt
+
+divisions_gdf = gpd.read_file('../../uploads/input_layers/contour.geojson')
+
+# # Mock ML/AI function for now
+# def optimal_zone_allocation(area, population_density):
+#     """Randomly assign land use zoning based on population and area."""
+#     residential = area * 0.3  # 30% residential
+#     agriculture = area * 0.35  # 35% agricultural
+#     industrial = area * 0.2   # 20% industrial
+#     green_space = area * 0.15  # 15% green space
+#     return {"residential": residential, "agriculture": agriculture, "industrial": industrial, "green_space": green_space}
+#
+# # Function for public services allocation
+# def public_service_allocation(area):
+#     """Allocate space for public services."""
+#     total_public_services = area * 0.1  # 10% of total area
+#     healthcare = total_public_services * 0.3
+#     education = total_public_services * 0.3
+#     admin = total_public_services * 0.4
+#     return {"total_public_services": total_public_services, "healthcare": healthcare, "education": education, "admin": admin}
+#
+# # Connection data for transportation links (from user input)
+# divisions_connection_data = {
+#     "divisions": [
+#         {
+#             "name": "Barishal",
+#             "connected_to": ["Dhaka", "Khulna"]
+#         },
+#         {
+#             "name": "Chittagong",
+#             "connected_to": ["Dhaka", "Sylhet"]
+#         },
+#         # Add other divisions here as needed
+#     ]
+# }
+#
+#
+# # Create a function to generate spatial planning for each division (region/polygon)
+# def generate_spatial_plan(division_data):
+#     name, geometry, population_density = division_data
+#
+#     # Step 1: Calculate the area of the division
+#     area = geometry.area
+#
+#     # Step 2: Allocate zones for residential, industrial, agriculture, and green spaces
+#     land_use = optimal_zone_allocation(area, population_density)
+#
+#     # Step 3: Allocate space for public services (e.g., healthcare, education, etc.)
+#     public_services = public_service_allocation(area)
+#
+#     # Step 4: (Mock) Create transportation links based on connection data
+#     connections = [div['connected_to'] for div in divisions_connection_data['divisions'] if div['name'] == name]
+#
+#     return {
+#         "division_name": name,
+#         "area": area,
+#         "population_density": population_density,
+#         "land_use": land_use,
+#         "public_services": public_services,
+#         "connections": connections[0] if connections else []
+#     }
+#
+#
+# def dcs_parallel_processing(divisions_gdf):
+#     """Distribute spatial planning generation using multiprocessing."""
+#     # Extract name, geometry, and population density for each division
+#     division_data = [(row['name'], row['geometry'], random.randint(100, 1000)) for index, row in
+#                      divisions_gdf.iterrows()]
+#
+#     # Use multiprocessing Pool to parallelize the process
+#     with Pool(processes=4) as pool:  # Adjust the number of processes as needed
+#         results = pool.map(generate_spatial_plan, division_data)
+#
+#     return results
+#
+#
+#
+# # Dummy function to simulate spatial planning for each division
+# def spatial_planning_for_division(division):
+#     # For simplicity, this is just returning the division geometry (simulated)
+#     return division
+#
+#
+# # Function to generate spatial planning in parallel
+# def dcs_parallel_processing(divisions_gdf):
+#     with Pool() as pool:
+#         spatial_plans = pool.map(spatial_planning_for_division, divisions_gdf.geometry)
+#     return spatial_plans
+#
+#
+# # Function to generate images for each division's spatial plan
+# def generate_plan_images(divisions_gdf, spatial_plans):
+#     for idx, plan in enumerate(spatial_plans):
+#         division_name = divisions_gdf.iloc[idx]["name"]
+#
+#         # Plotting the spatial plan using matplotlib
+#         fig, ax = plt.subplots()
+#         plan.plot(ax=ax, color="lightblue", edgecolor="black")
+#
+#         # Title for the division
+#         ax.set_title(f"Spatial Plan for {division_name}")
+#
+#         # Save the figure as an image file
+#         plt.savefig(f"spatial_plan_{division_name}.png")
+#         plt.close()
+#
+#
+# if __name__ == "__main__":
+#     # Load the division contour (GeoJSON or shapefile)
+#     divisions_gdf = gpd.read_file('path_to_division_contours.geojson')
+#
+#     # Run the distributed spatial planning system
+#     spatial_plans = dcs_parallel_processing(divisions_gdf)
+#
+#     # Generate spatial planning images for each division
+#     generate_plan_images(divisions_gdf, spatial_plans)
+
+
+import os
+import random
+import geopandas as gpd
+import matplotlib.pyplot as plt
+from shapely.geometry import Polygon
+from multiprocessing import Pool
+
+
+# Mock ML/AI function to allocate zones
+def zone_allocation(area, population_density):
+    """Assign land use zoning and public services based on area and population."""
+    residential = area * 0.3  # 30% residential
+    agriculture = area * 0.35  # 35% agricultural
+    industrial = area * 0.2  # 20% industrial
+    green_space = area * 0.15  # 15% green space
+
+    total_public_services = area * 0.1  # 10% for public services
+    healthcare = total_public_services * 0.3
+    education = total_public_services * 0.3
+    admin = total_public_services * 0.4
+
+    return {
+        "land_use": {
+            "residential": residential,
+            "agriculture": agriculture,
+            "industrial": industrial,
+            "green_space": green_space
+        },
+        "public_services": {
+            "total_public_services": total_public_services,
+            "healthcare": healthcare,
+            "education": education,
+            "admin": admin
+        }
+    }
+
+
+# Function to generate spatial planning for each division
+def generate_spatial_plan(division_data):
+    name, geometry, population_density = division_data
+    area = geometry.area
+
+    divisions_connection_data = {
+        "divisions": [
+            {
+                "name": "Barishal",
+                "connected_to": ["Dhaka", "Khulna"]
+            },
+            {
+                "name": "Chittagong",
+                "connected_to": ["Dhaka", "Sylhet"]
+            },
+            # Add other divisions here as needed
+        ]
+    }
+
+    allocations = zone_allocation(area, population_density)
+
+    connections = [div['connected_to'] for div in divisions_connection_data['divisions'] if div['name'] == name]
+
+    return {
+        "division_name": name,
+        "area": area,
+        "population_density": population_density,
+        "allocations": allocations,
+        "connections": connections[0] if connections else []
+    }
+
+
+# Function to distribute spatial planning generation
+def dcs_parallel_processing(divisions_gdf):
+    division_data = [(row['name'], row['geometry'], random.randint(100, 1000)) for index, row in
+                     divisions_gdf.iterrows()]
+
+    with Pool(processes=4) as pool:
+        results = pool.map(generate_spatial_plan, division_data)
+
+    return results
+
+
+import os
+import matplotlib.pyplot as plt
+import geopandas as gpd
+from shapely.geometry import Polygon, Point
+import random
+
+import os
+import matplotlib.pyplot as plt
+import geopandas as gpd
+from shapely.geometry import Polygon, Point, MultiPolygon
+import random
+import numpy as np
+from descartes import PolygonPatch
+
+
+# Function to simulate random partitioning of a division polygon
+def create_organic_partition(geometry, allocations, buffer_dist=0.02):
+    """Create organic partitions within the division polygon."""
+    zones = {}
+    minx, miny, maxx, maxy = geometry.bounds
+    total_area = geometry.area
+    current_area = 0
+
+    remaining_geometry = geometry
+
+    for zone, allocation in allocations.items():
+        # Calculate the area for this zone
+        zone_area = allocation / total_area
+
+        # Randomly generate a few points inside the division to create sub-zones
+        num_points = max(5, int(zone_area * 100))  # More points for larger zones
+        points = [Point(random.uniform(minx, maxx), random.uniform(miny, maxy)) for _ in range(num_points)]
+
+        # Create Voronoi-like partitioning or other partitioning from points
+        sub_zone_polygon = remaining_geometry.buffer(buffer_dist)
+
+        # Ensure the area of the generated sub-zone matches the required allocation
+        if sub_zone_polygon.area >= zone_area:
+            zones[zone] = sub_zone_polygon
+            current_area += zone_area
+            remaining_geometry = remaining_geometry.difference(sub_zone_polygon)
+        else:
+            zones[zone] = remaining_geometry
+
+    return zones
+
+
+# Function to generate high-resolution images for each division's spatial plan
+def generate_plan_images(divisions_gdf, spatial_plans):
+    for idx, plan in enumerate(spatial_plans):
+        division_name = plan['division_name']
+
+        # Plot a blank map for visualization
+        fig, ax = plt.subplots(figsize=(10, 10), dpi=300)  # Higher resolution (dpi=300)
+        divisions_gdf.iloc[[idx]].plot(ax=ax, color="lightgray", edgecolor="black")
+
+        # Create organic partitioned polygons for different land use zones
+        geometry = divisions_gdf.iloc[idx].geometry
+        allocations = plan['land_use']  # Land use allocations from the spatial plan
+        partitioned_zones = create_organic_partition(geometry, allocations)
+
+        # Define colors for each zone type
+        zone_colors = {
+            "residential": "lightcoral",
+            "agriculture": "lightgreen",
+            "industrial": "lightblue",
+            "green_space": "lightyellow"
+        }
+
+        # Plot each partitioned zone with a specific color
+        for zone, polygon in partitioned_zones.items():
+            if isinstance(polygon, MultiPolygon):
+                for p in polygon:
+                    patch = PolygonPatch(p, facecolor=zone_colors[zone], edgecolor="black", alpha=0.5)
+                    ax.add_patch(patch)
+            else:
+                patch = PolygonPatch(polygon, facecolor=zone_colors[zone], edgecolor="black", alpha=0.5)
+                ax.add_patch(patch)
+
+        # Add title and legend
+        ax.set_title(f"Spatial Plan for {division_name}", fontsize=16)
+        ax.legend(handles=[plt.Line2D([0], [0], color=color, lw=4, label=zone) for zone, color in zone_colors.items()])
+
+        # Create output directory if it doesn't exist
+        output_dir = "../../outputs"
+        os.makedirs(output_dir, exist_ok=True)
+
+        # Save each image as high-resolution PNG
+        plt.savefig(f"{output_dir}/spatial_plan_{division_name}.png", dpi=300)  # Higher resolution
+        plt.close()
+
+
+if __name__ == "__main__":
+    # Load the division contour (GeoJSON or shapefile)
+    # divisions_gdf = gpd.read_file('path_to_division_contours.geojson')
+
+    # Run the distributed spatial planning system
+    spatial_plans = dcs_parallel_processing(divisions_gdf)
+
+    # Generate spatial planning images for each division
+    generate_plan_images(divisions_gdf, spatial_plans)
+
+    # divisions_connection_data = {
+    #     "divisions": [
+    #         {
+    #             "name": "Barishal",
+    #             "connected_to": ["Dhaka", "Khulna"]
+    #         },
+    #         {
+    #             "name": "Chittagong",
+    #             "connected_to": ["Dhaka", "Sylhet"]
+    #         },
+    #         # Add other divisions here as needed
+    #     ]
+    # }

@@ -1,0 +1,230 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 1em 0;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    display: flex;
+    width: 90%;
+    max-width: 1200px;
+    flex-direction: row;
+    gap: 20px;
+}
+
+/* Sidebar styles */
+.sidebar {
+    background-color: #ffffff;
+    padding: 20px;
+    width: 30%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.sidebar form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.sidebar label {
+    margin-bottom: 5px;
+}
+
+.sidebar input {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.sidebar button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.sidebar button:hover {
+    background-color: #45a049;
+}
+
+/* Map area styles */
+.map-area {
+    flex-grow: 1;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.map-area h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+#map {
+    width: 100%;
+    height: 500px;
+    background-color: #e5e5e5;
+}
+
+/* Footer styles */
+footer {
+    text-align: center;
+    padding: 1em 0;
+    background-color: #333;
+    color: white;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.file-info label {
+    font-weight: bold;
+}
+
+.file-info .file-name {
+    font-size: 1.1em;
+}
+
+.file-actions button {
+    margin-left: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.file-actions button:hover {
+    background-color: #45a049;
+}
+
+.file-list {
+    padding: 0;
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.file-list li {
+    display: flex;
+    flex-direction: row;
+}
+
+.file-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.file-actions {
+    display: flex;
+    flex-direction: row;
+}
+
+.input-layer-status {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+.input-layer-status-item {
+    display: flex;
+    align-items: center;
+    /*margin-bottom: 10px;*/
+    /*width: 80px;*/
+    font-size: small;
+}
+
+.input-layer-status-item:not(:first-child) {
+    margin-left: 5px;
+}
+
+.input-layer-status-item :not(:first-child) {
+    margin-left: 5px;
+}
+
+.circle {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border-radius: 50%;
+    background-color: #a3a3a3; /* Green background */
+    color: white; /* White text color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*margin-right: 5px; !* Space between circle and text *!*/
+    font-size: 18px; /* Font size for tick mark */
+    font-weight: bold; /* Bold tick mark */
+}
+
+.input-layer-status-item.available .circle {
+    background-color: #4ac373; /* Green background */
+}
+
+.map-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.map-header button {
+    margin: 5px;
+}
+
+.ok-button {
+    background: #ffffff;
+    color: #333333;
+    border: 1px solid #4ac373;
+    padding: 0 10px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.ok-button:hover {
+    background: #ceffdf;
+}
+
+.ok-button:active {
+    background: #5b9a6b;
+    color: white;
+}

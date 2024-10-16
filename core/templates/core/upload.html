@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload GeoJSON</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/upload_style.css' %}">  <!-- Link to CSS file -->
+</head>
+<body>
+    <div class="container">
+        <h1>Upload GeoJSON File</h1>
+        <!-- Form to upload a GeoJSON file -->
+        <form action="{% url 'upload_geojson' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="geojson_file">Choose GeoJSON File:</label>
+                <input type="file" name="geojson_file" id="geojson_file" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Upload</button>
+            </div>
+        </form>
+
+        <!-- Displaying messages if there are any success or error messages -->
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</body>
+</html>

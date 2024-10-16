@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISP Framework - Spatial Planning</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Intelligent Spatial Planning for Bangladesh</h1>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Sidebar for inputs -->
+            <div class="sidebar">
+
+                    <h2>Select Input Layer</h2>
+                    <form id="input-form" action="{% url 'upload_geojson' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label for="input-layer">Select Input Layer:</label>
+                        <select id="input-layer" name="input-layer" onchange="updateInputFileHint()">
+                            <option value="">--Select an Input Layer--</option>
+                            <option value="contour" id="option_contour">Contour</option>
+                            <option value="topography" id="option_topography">Topography</option>
+                            <option value="ecozone" id="option_ecozone">EcoZone</option>
+                            <option value="administrative_boundaries" id="option_administrative_boundaries">Administrative Boundaries</option>
+                            <option value="infrastructure" id="option_infrastructure">Infrastructure</option>
+                            <option value="socioeconomic" id="option_socioeconomic">Socioeconomic</option>
+                            <option value="digital_grid" id="option_digital_grid">Digital Grid</option>
+                            <option value="temporal_evolution" id="option_temporal_evolution">Temporal Evolution</option>
+                        </select>
+
+                        <p id="file-hint"></p>
+
+                        <label for="geojson-file">Select File:</label>
+                        <input type="file" id="geojson-file" name="geojson-file" accept=".json, .geojson, .csv">
+                        <button type="button" onclick="addFileToList()">Add to List</button>
+
+                        <h2>Selected Files</h2>
+                        <ul id="file-list" class="file-list"></ul>
+
+                        <button type="submit">Upload All Files</button>
+                    </form>
+                </div>
+
+            <!-- Map display area -->
+            <div class="map-area">
+                <div class="map-header">
+                    <h2>Map Output</h2>
+                    <button class="ok-button" type="button" onclick="window.location.href = {% url 'spatial-planning' %}">Create Spatial Planning</button>
+                </div>
+                <div id="map"></div>
+                <p>Available Input Layers in the Database</p>
+                <div class="input-layer-status">
+                    <div class="input-layer-status-item" id="contour_status">
+                        <div class="circle">✔</div>
+                        <span>Contour</span>
+                    </div>
+                    <div class="input-layer-status-item" id="topography_status">
+                        <div class="circle">✔</div>
+                        <span>Topography</span>
+                    </div>
+                    <div class="input-layer-status-item" id="ecozone_status">
+                        <div class="circle">✔</div>
+                        <span>Ecozone</span>
+                    </div>
+                    <div class="input-layer-status-item" id="infrastructure_footprint_status">
+                        <div class="circle">✔</div>
+                        <span>Infrastructure Footprint</span>
+                    </div>
+                    <div class="input-layer-status-item" id="socioeconomic_map_status">
+                        <div class="circle">✔</div>
+                        <span>Socioeconomic Map</span>
+                    </div>
+                    <div class="input-layer-status-item" id="administrative_boundaries_status">
+                        <div class="circle">✔</div>
+                        <span>Administrative Boundaries</span>
+                    </div>
+                    <div class="input-layer-status-item" id="digital_grid_status">
+                        <div class="circle">✔</div>
+                        <span>Digital Grid</span>
+                    </div>
+                    <div class="input-layer-status-item" id="temporal_evolution_status">
+                        <div class="circle">✔</div>
+                        <span>Temporal Evolution</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Intelligent Spatial Planning Framework</p>
+    </footer>
+
+</body>
+
+<script>
+    var uploadGeojsonURL = "{% url 'upload_geojson' %}"
+    var getAvailableInputsURL = "{% url 'get_available_input_layers' %}"
+</script>
+
+<script src="{% static 'js/index.js' %}"></script>
+
+</html>
