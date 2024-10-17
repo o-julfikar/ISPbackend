@@ -165,7 +165,8 @@ function loadInputLayersStatus() {
     fetch(getAvailableInputsURL, {
         method: "GET",
     }).then(response => {
-        return response.json();
+        if (response.ok) return response.json();
+        console.log(response);
     }).then(data => {
         data.layers.forEach((layer, idx) => {
             const layerStatus = document.getElementById(layer + "_status")

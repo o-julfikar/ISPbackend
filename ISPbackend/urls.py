@@ -14,9 +14,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls.static import static
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path
+
 from core import views
+from core.services import spatial_planning
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -72,4 +76,5 @@ urlpatterns = [
     path('upload-geojson/', views.upload_geojson, name='upload_geojson'),
     path('get-avaialable-input-layers/', views.get_available_input_layers, name='get_available_input_layers'),
     path('spatial-planning/', views.spatialPlanning, name='spatial-planning'),
-]
+    path('spatial-planning/get-plan', spatial_planning.get_spatial_planning_data, name="spatial-planning-get-plan"),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

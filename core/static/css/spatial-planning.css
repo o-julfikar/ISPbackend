@@ -42,23 +42,32 @@ footer {
     width: 100px;
 }
 
-.list-container {
+.division-container {
     display: flex;
     gap: 10px;
     margin-left: 20px;
 }
 
-.list-item {
+.division-slider-item {
     padding: 10px;
     border: 1px solid #ddd;
     background-color: #f0f0f0;
-    cursor: pointer;
     transition: background-color 0.3s;
 }
 
-.list-item.active {
+.division-slider-item.active {
     background-color: #666;
     color: white;
+}
+
+.cursor-buttons button,
+.btn-home {
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.btn-home {
+    margin-right: 10px;
 }
 
 .bottom-segment {
@@ -71,8 +80,10 @@ footer {
 }
 
 .image-container img {
-    max-width: 100%;
-    height: auto;
+    /*max-width: 100%;*/
+    /*height: auto;*/
+
+    max-width: 600px;
 }
 
 .description-container {
@@ -90,4 +101,8 @@ footer {
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 4px;
+}
+
+.description-container ul ul {
+    margin-left: 20px;
 }

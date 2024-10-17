@@ -1,49 +1,106 @@
 const leftBtn = document.getElementById('leftBtn');
 const rightBtn = document.getElementById('rightBtn');
-const listItems = document.querySelectorAll('.list-item');
+const divisionContainer = document.getElementById("divisionContainer")
+const divisionSliderItems = document.getElementsByClassName('division-slider-item');
 const imageContainer = document.getElementById('imageContainer');
-const descriptionContainer = document.getElementById('descriptionContainer').getElementsByTagName('ul')[0];
+const descriptionContainer = document.getElementById('descriptionContainer');
 
 let currentIndex = 0;
 
-const images = [
-    "https://via.placeholder.com/400",
-    "https://via.placeholder.com/400/FF0000",
-    "https://via.placeholder.com/400/00FF00",
-    "https://via.placeholder.com/400/0000FF"
-];
+const spatialPlanImages = [];
 
-const descriptions = [
-    ["Description for Element 1 - Item 1", "Description for Element 1 - Item 2"],
-    ["Description for Element 2 - Item 1", "Description for Element 2 - Item 2"],
-    ["Description for Element 3 - Item 1", "Description for Element 3 - Item 2"],
-    ["Description for Element 4 - Item 1", "Description for Element 4 - Item 2"]
-];
+const spatialPlanLandUseData = [];
 
 function updateActiveItem(index) {
-    listItems.forEach((item, i) => {
+    Object.entries(divisionSliderItems).forEach(([_, item], i) => {
         item.classList.toggle('active', i === index);
     });
     updateImageAndDescription(index);
 }
 
 function updateImageAndDescription(index) {
-    imageContainer.innerHTML = `<img src="${images[index]}" alt="Image for Element ${index + 1}">`;
-    descriptionContainer.innerHTML = descriptions[index].map(desc => `<li>${desc}</li>`).join('');
+    imageContainer.innerHTML = `<img src="${spatialPlanImages[index]}" alt="Image for Element ${index + 1}">`;
+
+    descriptionContainer.innerHTML = ""
+
+    const descHeader = document.createElement("h2");
+    descHeader.innerHTML = divisionSliderItems[index].innerHTML
+
+    const descList = document.createElement("ul");
+
+    Object.entries(spatialPlanLandUseData[index]).forEach(([category, area]) => {
+        if (category === "public_space") {
+            const descSubList = document.createElement("ul");
+
+            Object.entries(area).forEach(([subCategory, subArea]) => {
+               const subItem = document.createElement("li");
+               subItem.innerHTML = toTitleCase(subCategory) + ": " + subArea + " sq. k.m."
+
+                descSubList.appendChild(subItem);
+            });
+
+            descList.appendChild(descSubList);
+        } else {
+            const descItem = document.createElement("li");
+            descItem.innerHTML = toTitleCase(category) + ": " + area + " sq. k.m."
+
+            descList.appendChild(descItem)
+        }
+    })
+
+    descriptionContainer.appendChild(descHeader);
+    descriptionContainer.appendChild(descList);
+}
+
+function toTitleCase(str) {
+    return str
+        .replace(/_/g, ' ') // Replace underscores with spaces
+        .toLowerCase() // Convert the whole string to lowercase first
+        .split(' ') // Split the string by spaces into an array of words
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
+        .join(' '); // Join the array back into a string
 }
 
 leftBtn.addEventListener('click', () => {
-    currentIndex = (currentIndex > 0) ? currentIndex - 1 : listItems.length - 1;
+    currentIndex = (currentIndex > 0) ? currentIndex - 1 : divisionSliderItems.length - 1;
     updateActiveItem(currentIndex);
 });
 
 rightBtn.addEventListener('click', () => {
-    currentIndex = (currentIndex < listItems.length - 1) ? currentIndex + 1 : 0;
+    currentIndex = (currentIndex < divisionSliderItems.length - 1) ? currentIndex + 1 : 0;
     updateActiveItem(currentIndex);
 });
 
-updateActiveItem(currentIndex); // Initialize first item as active
+// updateActiveItem(currentIndex); // Initialize first item as active
 
 window.onload = (e) => {
+    fetch(getSpatialPlanningURL, {
+        method: "GET",
+    }).then(response => {
+        return response.json();
+    }).then(data => {
+        Object.entries(data.spatial_plan_images).forEach(([division, image]) => {
+            spatialPlanImages.push(image)
+            const divisionSliderItem = document.createElement("div");
+            divisionSliderItem.classList.add("division-slider-item");
+            divisionSliderItem.innerHTML = division;
 
+            divisionContainer.appendChild(divisionSliderItem);
+            // divisionSliderItems.push(divisionSliderItem);
+
+        });
+
+        Object.entries(data.land_use).forEach(([division, land_use]) => {
+            spatialPlanLandUseData.push(land_use);
+
+        });
+
+        updateActiveItem(currentIndex);
+        if (spatialPlanImages.length > 0) {
+            document.getElementById("cursorButtons").style.visibility = "visible";
+        }
+
+    }).catch(error => {
+        window.location.href = "/";
+    });
 }
